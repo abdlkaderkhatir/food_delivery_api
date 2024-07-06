@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import { log } from 'console';
 import { populateInitialData } from '../initialData';
 import Scheduler from '../../application/sync/Scheduler';
+import { loginUsers } from '../initialUserData';
 
 dotenv.config();
 
@@ -27,6 +28,7 @@ export class Database {
   public async connectToDatabase() : Promise<void> {
     try {
       await mongoose.connect(this.MONGO_URI as string);
+      await loginUsers();
       await populateInitialData();
       Scheduler.startScheduler().then(() => {
         console.log('Scheduler started');
