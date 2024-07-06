@@ -3,6 +3,7 @@ import { IUserRepository } from "../../domain/repositories/IUserRepository";
 import { IUserDocument, UserModel } from "../models/UserModel";
 import { User } from "../../domain/entities/User";
 
+
 export class UserRepository implements IUserRepository {
     
         private userModel: Model<IUserDocument>;
@@ -10,6 +11,7 @@ export class UserRepository implements IUserRepository {
         constructor() {
             this.userModel = UserModel;
         }
+
     
         async create(user: User): Promise<User> {
             const newUser = new this.userModel(user);
