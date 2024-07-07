@@ -1,4 +1,4 @@
-import { Order } from "../entities/Order";
+import { Order, OrderItem } from "../entities/Order";
 
 
 
@@ -9,4 +9,10 @@ export interface IOrderRepository {
     update(order: Order): Promise<Order>;
     delete(id: string): Promise<void>;
     findAll(): Promise<Order[]>;
+}
+
+
+export interface IOrderItemRepository {
+  create(orderItemData: Partial<OrderItem>): Promise<OrderItem>;
+  findByOrderId(orderId: string): Promise<OrderItem[]>;
 }
