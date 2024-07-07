@@ -4,23 +4,21 @@ import { Request, Response } from "express";
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import {config} from '../../config';
 
 
-dotenv.config();
+// dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
 
 
 export class AuthController {
-    // private userRepository: IUserRepository;
     
-
-    constructor(private userRepository: IUserRepository) {
-        // this.userRepository = userRepository;
-    }
+    constructor(private userRepository: IUserRepository) {}
 
     async register(req: Request, res: Response) {
         try {
-            const { name, email, password } = req.body;
+
+            const { name, email, password , role , status } = req.body;
             const userAlreadyExists = await this.userRepository.findByEmail(email);
             if (userAlreadyExists) {
                 return res.status(400).json({ message: 'User already exists' });
@@ -31,10 +29,12 @@ export class AuthController {
             const user = await this.userRepository.create({
                 name,
                 email,
-                password: hashedPassword
+                password: hashedPassword,
+                role,
+                status
             } as User);
 
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
+            const token = jwt.sign({ id: user.id }, config.jwtSecret as string);
 
             return res.status(201).json({ token, user });
         } catch (error ) {
@@ -55,7 +55,7 @@ export class AuthController {
                 return res.status(401).json({ message: 'Invalid password' });
             }
 
-            const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET as string);
+            const token = jwt.sign({ id: user.id }, config.jwtSecret as string);
             return res.status(200).json({ token });
         } catch (error) {
             return res.status(400).json({ message: error });

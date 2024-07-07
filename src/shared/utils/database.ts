@@ -4,13 +4,15 @@ import { log } from 'console';
 import { populateInitialData } from '../initialData';
 import Scheduler from '../../application/sync/Scheduler';
 import { loginUsers } from '../initialUserData';
+import {config} from "../../config"
 
-dotenv.config();
+// dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
 
 export class Database {
 
-  private readonly MONGO_URI = process.env.MONGO_URI!;
+  // private readonly MONGO_URI = process.env.MONGO_URI!;
+  private readonly MONGO_URI = config.db.mongoUri;
 
   private static instance: Database;
 

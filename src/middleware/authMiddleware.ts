@@ -1,8 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
+import {config} from '../../src/config';
 
-dotenv.config();
+// dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
 const verifyToken = (req: Request & { user?: any }, res: Response, next: NextFunction) => {
     // const token = req.header('Authorization')?.replace('Bearer ', '');
@@ -12,7 +13,7 @@ const verifyToken = (req: Request & { user?: any }, res: Response, next: NextFun
     }
   
     try {
-      const decoded = jwt.verify(token, process.env.JWT_SECRET as string);
+      const decoded = jwt.verify(token, config.jwtSecret as string);
       req.user = decoded;
       next();
     } catch (error) {

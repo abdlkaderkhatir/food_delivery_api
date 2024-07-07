@@ -3,8 +3,9 @@ import { IUserRepository } from "../../domain/repositories/IUserRepository";
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import bcrypt from 'bcryptjs';
+import {config} from '../../config';
 
-dotenv.config();
+// dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
 
 export class AuthUseCases {

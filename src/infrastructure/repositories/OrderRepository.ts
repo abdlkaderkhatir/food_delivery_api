@@ -4,15 +4,15 @@ import { IOrderDocument, IOrderItemDocument, OrderItemModel, OrderModel } from "
 import { Order, OrderItem } from "../../domain/entities/Order";
 
 
-export class OrderRepository implements IOrderRepository {
+// export class OrderRepository implements IOrderRepository {
 
-  private  orderModel: Model<IOrderDocument>;
-  private  orderItemModel: Model<IOrderItemDocument>;
+//   private  orderModel: Model<IOrderDocument>;
+//   private  orderItemModel: Model<IOrderItemDocument>;
 
-  constructor() {
-    this.orderModel = OrderModel;
-    this.orderItemModel = OrderItemModel;
-  }
+//   constructor() {
+//     this.orderModel = OrderModel;
+//     this.orderItemModel = OrderItemModel;
+//   }
 
   // async getOrdersWithDetails(userId: string): Promise<any[]> {
   //   const orders = await this.orderModel.find({ userId }).populate('items').exec(); // what is the purpose of exec() here?
@@ -33,25 +33,25 @@ export class OrderRepository implements IOrderRepository {
   //   return ordersWithDetails;
   // }
 
-  async create(order: Partial<Order>): Promise<Order> {
-    const orderItems = await Promise.all((order.items ?? []).map(async item => {
-      const orderItem = new this.orderItemModel(item);
-      return orderItem.save();
-    });
+//   async create(order: Partial<Order>): Promise<Order> {
+//     const orderItems = await Promise.all((order.items ?? []).map(async item => {
+//       const orderItem = new this.orderItemModel(item);
+//       return orderItem.save();
+//     });
 
-    const newOrder = new this.orderModel({
-        ...order,
-        items: orderItems.map(item => item._id),
-    });
+//     const newOrder = new this.orderModel({
+//         ...order,
+//         items: orderItems.map(item => item._id),
+//     });
 
-    await newOrder.save();
+//     await newOrder.save();
 
-    return newOrder.toObject();
-  }
+//     return newOrder.toObject();
+//   }
 
   
   
-}
+// }
 
 
 
