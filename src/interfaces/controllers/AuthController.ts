@@ -9,6 +9,7 @@ import { OTP } from '../../shared/utils/otp';
 import { IOtpRepository } from "../../domain/repositories/IOtpRepository";
 import { Otp } from "../../domain/entities/Otp";
 import { EmailService } from "../../infrastructure/services/EmailService";
+import { log } from "console";
 
 
 // dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
@@ -71,6 +72,8 @@ export class AuthController {
         try {
             const { email, otp } = req.body;
             const user = await this.userRepository.findByEmail(email);
+            console.log('[OTP]', otp);
+            
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -80,8 +83,13 @@ export class AuthController {
             if (!otpData) {
                 return res.status(404).json({ message: 'OTP not found' });
             }
-
-            if (otpData?.otp !== otp) {
+            log('[OTP]', otpData);
+            // otp is string and otpData.otp is number
+            // console.log('[OTP]', otp);
+            // console.log('[OTP]', otpData.otp);
+            console.log(otpData?.otp !== otp);
+            
+            if (otpData?.otp.toString() !== otp ) {
                 return res.status(401).json({ message: 'Invalid OTP' });
             }
 
@@ -124,7 +132,7 @@ export class AuthController {
 
             // send email with otp
             const emailService = new EmailService();
-            await emailService.sendEmail(user.email, 'OTP Verification', `Your OTP is ${otp}`);
+            await emailService.sendEmail(user.email, 'Resend OTP Verification', `Your OTP is ${otp}`);
 
             return res.status(200).json({ message: 'OTP sent to your email' });
         } catch (error) {
