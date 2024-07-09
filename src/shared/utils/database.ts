@@ -29,13 +29,16 @@ export class Database {
 
   public async connectToDatabase() : Promise<void> {
     try {
-      await mongoose.connect(this.MONGO_URI as string);
-      await loginUsers();
-      await populateInitialData();
-      Scheduler.startScheduler().then(() => {
-        console.log('Scheduler started');
+      await mongoose.connect(this.MONGO_URI as string).
+      then(async ()  => {
+          console.log('Connected to database');
+          await loginUsers();
+          await populateInitialData();
+          Scheduler.startScheduler().then(() => {
+            console.log('Scheduler started');
+          });
+          // console.log('Connected to database');
       });
-      console.log('Connected to database');
     } catch (error) {
       console.log('Error connecting to database: ', error);
       process.exit(1);

@@ -10,8 +10,20 @@ const db = Database.getInstance();
 
 db.connectToDatabase();
 
+// cors
+// app.use((req, res, next) => {
+//   res.header('Access-Control-Allow-Origin', '*');
+//   res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE');
+//   res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+//   next();
+// });
+
+// cors
+
 
 app.use(express.json());
+
+
 app.use('/api', authRoutes);
 app.use('/api', foodRoutes);
 // app.use('/api', orderRoutes);

@@ -17,8 +17,8 @@ const syncWithDataServer = async () : Promise<void> => {
             await foodRepository.create(food);
             }
         }));
-    } catch (error) {
-        console.log('Error syncing with data server: ', error);
+    } catch (error : any) {
+        console.log('Error syncing with data server: ', error.message);
     }
 }
 

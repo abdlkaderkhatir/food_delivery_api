@@ -14,6 +14,10 @@ export const config = {
         database: process.env.DB_NAME || 'database',
         mongoUri: process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/food-delivery',
     },
+    email: {
+        user: process.env.EMAIL_USER || '',
+        pass: process.env.EMAIL_PASS || '',
+    },
     socket: {
         port: process.env.SOCKET_PORT || 3334
     }
