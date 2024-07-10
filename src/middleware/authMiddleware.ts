@@ -1,11 +1,13 @@
-import { Request, Response, NextFunction } from 'express';
+import { Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import {config} from '../../src/config';
+import { CustomRequest } from '../domain/entities/custumeRequest';
 
 // dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
-const verifyToken = (req: Request & { user?: any }, res: Response, next: NextFunction) => {
+// const verifyToken = (req: Request & { user?: any }, res: Response, next: NextFunction) => {
+const verifyToken = (req: CustomRequest, res: Response, next: NextFunction) => {
     // const token = req.header('Authorization')?.replace('Bearer ', '');
     const token = req.headers.authorization;
     if (!token) {

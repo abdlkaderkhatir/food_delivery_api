@@ -89,7 +89,7 @@ export class AuthController {
             // console.log('[OTP]', otpData.otp);
             console.log(otpData?.otp !== otp);
             
-            if (otpData?.otp.toString() !== otp ) {
+            if (otpData?.otp !== otp ) {
                 return res.status(401).json({ message: 'Invalid OTP' });
             }
 
@@ -173,7 +173,8 @@ export class AuthController {
     async login(req: Request, res: Response) {
         try {
             const { email, password } = req.body;
-            const user = await this.userRepository.findByEmailAndPassword(email, password);
+            // const user = await this.userRepository.findByEmailAndPassword(email, password);
+            const user = await this.userRepository.findByEmail(email);
             if (!user) {
                 return res.status(404).json({ message: 'User not found' });
             }
@@ -184,20 +185,134 @@ export class AuthController {
             }
 
             const token = jwt.sign({ id: user.id }, config.jwtSecret as string);
-            return res.status(200).json({ token });
+            return res.status(200).json({ token , user });
         } catch (error) {
             return res.status(400).json({ message: error });
         }
     }
 
-    async getAllUsers(req: Request, res: Response) {
+    // TODO: Implement the resetPassword method
+
+    async resetPassword(req: Request, res: Response) {
         try {
-            const users = await this.userRepository.getAllUsers();
-            return res.status(200).json(users);
+
+            const { email, password } = req.body;
+            const user = await this.userRepository.findByEmail(email);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            user.password = hashedPassword;
+            await this.userRepository.update(user);
+
+            return res.status(200).json({ message: 'Password reset successfully' });
         } catch (error) {
             return res.status(400).json({ message: error });
         }
     }
 
+    // TODO : Implement the changePassword method
+
+    async changePassword(req: Request, res: Response) {
+        try {
+            const { email, oldPassword, newPassword } = req.body;
+            const user = await this.userRepository.findByEmail(email);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            const isMatch = await bcrypt.compare(oldPassword, user.password);
+            if (!isMatch) {
+                return res.status(401).json({ message: 'Invalid old password' });
+            }
+
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(newPassword, salt);
+
+            user.password = hashedPassword;
+            await this.userRepository.update(user);
+
+            return res.status(200).json({ message: 'Password changed successfully' });
+        } catch (error) {
+            return res.status(400).json({ message: error });
+        }
+    }
+
+
+    // TODO : Implement the forgotPassword method
+
+    async forgotPassword(req: Request, res: Response) {
+        try {
+            const { email } = req.body;
+            const user = await this.userRepository.findByEmail(email);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            const otp = OTP.genearateOTP();
+            user.passwordResetToken = otp;
+            user.passwordResetExpires = new Date(Date.now() + 5 * 60 * 1000);
+
+            await this.userRepository.update(user);
+           
+
+            // send email with otp
+            const emailService = new EmailService();
+            await emailService.sendEmail(user.email, 'Forgot Password', `Your OTP is ${otp}`);
+
+            return res.status(200).json({ message: 'OTP sent to your email' });
+        } catch (error) {
+            return res.status(400).json({ message: error });
+        }
+    }
+
+
+    // TODO : Implement the verifyForgotPasswordOTP method
+
+    async verifyForgotPasswordOTP(req: Request, res: Response) {
+        try {
+            const { email, otp , password } = req.body;
+            const user = await this.userRepository.findByEmail(email);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            if (user.passwordResetToken !== otp) {
+                return res.status(401).json({ message: 'Invalid OTP' });
+            }
+
+            if (user.passwordResetExpires && user.passwordResetExpires < new Date()) {
+                return res.status(401).json({ message: 'OTP has expired' });
+            }
+
+            // we need to change the password
+            const salt = await bcrypt.genSalt(10);
+            const hashedPassword = await bcrypt.hash(password, salt);
+
+            user.password = hashedPassword;
+            // user.passwordResetToken = '';
+            // user.passwordResetExpires = undefined;
+
+            const updatedUser = await this.userRepository.update(user);
+
+            return res.status(200).json({ message: 'OTP verified successfully', user: updatedUser });
+        } catch (error) {
+            return res.status(400).json({ message: error });
+        }
+    }
+
+    
+
+    // async getAllUsers(req: Request, res: Response) {
+    //     try {
+    //         const users = await this.userRepository.getAllUsers();
+    //         return res.status(200).json(users);
+    //     } catch (error) {
+    //         return res.status(400).json({ message: error });
+    //     }
+    // }
 
 }

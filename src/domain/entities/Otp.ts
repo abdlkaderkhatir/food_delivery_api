@@ -2,6 +2,6 @@
 export interface Otp {
     id: string;
     userId : string;
-    otp: number;
+    otp: string;
     expiresAt: Date;
 }
