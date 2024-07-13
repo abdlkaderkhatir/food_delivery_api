@@ -13,3 +13,7 @@ const userController = new UserController(userRepo);
 
 
 router.get('/profile', verifyToken , userController.getProfile.bind(userController));
+
+
+// module.exports = router;
+export default router;

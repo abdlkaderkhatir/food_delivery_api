@@ -11,8 +11,8 @@ const bannerRepo = new BannerRepository();
 const bannerController = new BannerController(bannerRepo);
 
 
-router.post('/banners/create', verifyToken , adminRole , Utils.upload.single('image') , bannerController.createBanner.bind(bannerController));
-router.put('/banners/update', bannerController.updateBanner.bind(bannerController));
+router.post('/create', verifyToken , adminRole , Utils.upload.single('image') , bannerController.createBanner.bind(bannerController));
+router.put('/update', bannerController.updateBanner.bind(bannerController));
 router.delete('/delete/:id', bannerController.deleteBanner.bind(bannerController));
 router.get('/get/:id', bannerController.getBanner.bind(bannerController));
 router.get('/getAll', bannerController.getAllBanners.bind(bannerController));

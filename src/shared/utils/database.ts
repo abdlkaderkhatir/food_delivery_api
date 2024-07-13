@@ -5,6 +5,7 @@ import { populateInitialData } from '../initialData';
 import Scheduler from '../../application/sync/Scheduler';
 import { loginUsers } from '../initialUserData';
 import {config} from "../../config"
+import { insertInitialCities } from '../initialCities';
 
 // dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
@@ -34,6 +35,7 @@ export class Database {
           console.log('Connected to database');
           await loginUsers();
           await populateInitialData();
+          await insertInitialCities();
           Scheduler.startScheduler().then(() => {
             console.log('Scheduler started');
           });

@@ -1,10 +1,11 @@
 import express, { Request, Response } from 'express';
 import multer  from 'multer';
 import {Database}  from './shared/utils/database';
-import foodRoutes from './interfaces/routes/FoodRoutes';
-import authRoutes from './interfaces/routes/AuthRoutes';
-import syncRoutes from './interfaces/routes/SyncRoutes';
-import bannerRoutes from './interfaces/routes/BannerRoutes';
+// import foodRoutes from './interfaces/routes/FoodRoutes';
+// import authRoutes from './interfaces/routes/AuthRoutes';
+// import syncRoutes from './interfaces/routes/SyncRoutes';
+// import bannerRoutes from './interfaces/routes/BannerRoutes';
+import indexRoutes from './interfaces/routes/index';
 import path from 'path';
 // import orderRoutes from './interfaces/routes/OrderRoutes';
 
@@ -52,7 +53,7 @@ app.use(express.json());
 // });
 
 
-// // Single file upload
+// Single file upload
 
 // app.post('/upload', upload.single('file'), (req: Request, res: Response) => {
 //   if (!req.file) {
@@ -78,12 +79,12 @@ app.use('/src/uploads', express.static('src/uploads'));
 
 
 // routes
-app.use('/api', authRoutes);
-app.use('/api', foodRoutes);
-app.use('/api', syncRoutes);
-app.use('/api', bannerRoutes);
+// app.use('/api', authRoutes);
+// app.use('/api', foodRoutes);
+// app.use('/api', syncRoutes);
+// app.use('/api', bannerRoutes);
 // app.use('/api', orderRoutes);
-app.use('/api', syncRoutes);
+app.use('/api', indexRoutes);
 
 
 app.get('/', (req, res) => {
