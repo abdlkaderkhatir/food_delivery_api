@@ -22,5 +22,6 @@ const verifyToken = (req: CustomRequest, res: Response, next: NextFunction) => {
       res.status(400).json({ message: 'Token is not valid.' });
     }
   };
-  
-  export default verifyToken;
+
+
+export default verifyToken;

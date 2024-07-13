@@ -58,7 +58,7 @@ export class AuthController {
             await emailService.sendEmail(user.email, 'OTP Verification', `Your OTP is ${otp}`);
             
 
-            const token = jwt.sign({ id: user.id }, config.jwtSecret as string);
+            const token = jwt.sign({ id: user.id , role : user.role }, config.jwtSecret as string);
 
             return res.status(201).json({ token, user });
         } catch (error ) {
@@ -184,7 +184,7 @@ export class AuthController {
                 return res.status(401).json({ message: 'Invalid password' });
             }
 
-            const token = jwt.sign({ id: user.id }, config.jwtSecret as string);
+            const token = jwt.sign({ id: user.id , role : user.role }, config.jwtSecret as string);
             return res.status(200).json({ token , user });
         } catch (error) {
             return res.status(400).json({ message: error });
