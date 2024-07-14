@@ -6,8 +6,9 @@ export interface IRestaurentDocument extends Document, Omit<Restaurent, '_id' | 
 
 
 const RestaurentSchema = new Schema({
-    user_id: { type: String, required: true, default: '' },
-    city_id: { type: String, required: true, default: '' },
+    user_id: { type: Schema.Types.ObjectId as any, ref: 'User', required: true },
+    // city_id: { type: String, required: true, default: '' },
+    city_id: { type: Schema.Types.ObjectId as any, ref: 'City', required: true },
     name: { type: String, required: true, default: '' },
     location: { type: String, required: true, default: '' },
     city: { type: String, required: true, default: '' },
