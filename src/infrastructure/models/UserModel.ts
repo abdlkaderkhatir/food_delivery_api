@@ -1,8 +1,8 @@
-import { model, Schema } from "mongoose";
+import { Document, model, Schema } from "mongoose";
 import { User } from "../../domain/entities/User";
 
 
-export interface IUserDocument extends Document , Omit<User, 'id'> {}
+export interface IUserDocument extends Document , Omit<User, '_id'> {}
 
 
 const UserSchema = new Schema({
@@ -16,6 +16,16 @@ const UserSchema = new Schema({
   role: { type: String, required: true },
   status: { type: String, required: true },
 });
+
+// i need when return user remive _id and __v and rename _id to id
+
+// UserSchema.set('toJSON', {
+//   transform: function (doc, ret) {
+//     ret.id = ret._id;
+//     delete ret._id;
+//     delete ret.__v;
+//   }
+// });
 
 
 export const UserModel = model<IUserDocument>('User', UserSchema);

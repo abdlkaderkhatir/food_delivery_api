@@ -20,7 +20,7 @@ export class UserRepository implements IUserRepository {
         }
     
         async update(user: User): Promise<User> {
-            const updatedUser = await this.userModel.findByIdAndUpdate(user.id, user, { new: true });
+            const updatedUser = await this.userModel.findByIdAndUpdate(user._id, user, { new: true });
             return updatedUser as User;
         }
     

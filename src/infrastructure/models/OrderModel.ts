@@ -1,4 +1,4 @@
-import mongoose, { model, Schema } from "mongoose";
+import mongoose, { Document, model, Schema } from "mongoose";
 import { Order, OrderItem } from "../../domain/entities/Order";
 
 

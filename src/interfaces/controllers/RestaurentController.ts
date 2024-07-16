@@ -35,10 +35,12 @@ export class RestaurentController {
                 ...restaurent,
                 user_id : userId,
             }
-            // const restaurentExists = await this.restaurentRepo.fetchOne(restaurent.name);
-            // if (restaurentExists) {
-            //     return res.status(400).json({ message: 'Restaurent already exists' });
-            // }
+
+            const restaurentExists = await this.restaurentRepo.fetchByName(restaurent.name);
+            if (restaurentExists) {
+                return res.status(400).json({ message: 'Restaurent already exists' });
+            }
+            
             const newRestaurent = await this.restaurentRepo.create(restaurentData);
             res.status(201).json(newRestaurent);
         } catch (error : any) {

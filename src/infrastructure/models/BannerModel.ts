@@ -1,9 +1,11 @@
-import { model, Schema } from "mongoose";
+import { Document, model, ObjectId, Schema } from "mongoose";
 import { Banner } from "../../domain/entities/Banner";
 
 
 
-export interface IBannerDocument extends Document , Omit<Banner, '_id'> {}
+export interface IBannerDocument extends Document , Omit<Banner, '_id'> {
+  _id: ObjectId;
+}
 
 
 const BannerSchema = new Schema({

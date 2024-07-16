@@ -48,7 +48,7 @@ export class AuthController {
             console.log(user._id);
             
             const otpValue = await this.otpRepository.create({
-                userId: user._id,
+                userId: user._id.toString(),
                 otp: otp,
                 expiresAt: new Date(Date.now() + 5 * 60 * 1000),
             } as Otp);
@@ -58,7 +58,7 @@ export class AuthController {
             await emailService.sendEmail(user.email, 'OTP Verification', `Your OTP is ${otp}`);
             
 
-            const token = jwt.sign({ id: user.id , role : user.role }, config.jwtSecret as string);
+            const token = jwt.sign({ id: user._id , role : user.role }, config.jwtSecret as string);
 
             return res.status(201).json({ token, user });
         } catch (error ) {
@@ -184,7 +184,12 @@ export class AuthController {
                 return res.status(401).json({ message: 'Invalid password' });
             }
 
-            const token = jwt.sign({ id: user.id , role : user.role }, config.jwtSecret as string);
+            console.log('[===>]', user);
+            console.log('[_ID]', user._id);
+            // console.log('[ID]', user.id);
+            
+
+            const token = jwt.sign({ id: user._id , role : user.role }, config.jwtSecret as string);
             return res.status(200).json({ token , user });
         } catch (error) {
             return res.status(400).json({ message: error });

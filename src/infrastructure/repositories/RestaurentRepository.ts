@@ -11,7 +11,8 @@ export class RestaurentRepository implements IRestaurentRepository {
         this.restaurentModel = RestaurentModel;
     }
 
-
+    
+    
     getAllRestaurents(): Promise<Restaurent[]> {
         try {
             return this.restaurentModel.find();
@@ -37,6 +38,16 @@ export class RestaurentRepository implements IRestaurentRepository {
             throw error;
         }
     }
+
+
+    fetchByName(name: string): Promise<Restaurent | null> {
+        try {
+            return this.restaurentModel.findOne({ name });
+        } catch (error) {
+            throw error;
+        }
+    }
+
     // async update(restaurent: Partial<Restaurent>): Promise<Restaurent | null> {
     //     try {
     //         // return await this._restaurentModel.findByIdAndUpdate(restaurent._id, restaurent, { new: true });

@@ -5,7 +5,7 @@ export interface User {
     password: string;
     passwordResetToken?: string;
     passwordResetExpires?: Date;
-    id: string;
+    // id: string;
     role?: string;
     status?: string;
     phone?: string;
