@@ -7,4 +7,5 @@ export interface ICategorieRepository {
     getAllCategories(): Promise<Categorie[]>;
     fetch(id: string): Promise<Categorie | null>;
     fetchByName(name: string): Promise<Categorie | null>;
+    getCategoriesByRestaurent(id: string): Promise<Categorie[]>;
 }

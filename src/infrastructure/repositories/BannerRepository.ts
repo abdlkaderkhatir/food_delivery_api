@@ -46,7 +46,7 @@ export class BannerRepository implements IBannerRepository {
         if (updatedBanner) {
             return {
                 ...updatedBanner.toObject(),
-                _id: updatedBanner._id.toString()
+                _id: updatedBanner._id
             } as Banner;
         }
         return null ;

@@ -13,13 +13,44 @@ export class RestaurentRepository implements IRestaurentRepository {
 
     
     
-    getAllRestaurents(): Promise<Restaurent[]> {
+    async getAllRestaurents(): Promise<Restaurent[]> {
         try {
             return this.restaurentModel.find();
         } catch (error) {
             throw error;
         } 
     }
+
+    async getNearRestaurents(lat: string, long: string): Promise<Restaurent[]> {
+        try {
+            return [];
+            // my model have long and lat does not have Location have 
+            // return this.restaurentModel.find({
+            //     location: {
+            //         $near: {
+            //             $geometry: {
+            //                 type: "Point",
+            //                 coordinates: [parseFloat(long), parseFloat(lat)]
+            //             },
+            //             $maxDistance: 1000
+            //         }
+            //     }
+            // });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+    async searchRestaurents(search: string): Promise<Restaurent[]> {
+        try {
+            return this.restaurentModel.find({ name: { $regex: search, $options: 'i' } });
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
     
     async create(restaurent: Partial<Restaurent>): Promise<Restaurent> {
         try {

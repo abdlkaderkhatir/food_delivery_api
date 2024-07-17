@@ -4,7 +4,7 @@ import { Banner } from "../../domain/entities/Banner";
 
 
 export interface IBannerDocument extends Document , Omit<Banner, '_id'> {
-  _id: ObjectId;
+  // _id: ObjectId;
 }
 
 

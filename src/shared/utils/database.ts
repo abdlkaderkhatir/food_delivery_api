@@ -30,32 +30,19 @@ export class Database {
 
   public async connectToDatabase() : Promise<void> {
     try {
-      await mongoose.connect(this.MONGO_URI as string,
-        {
-          // useNewUrlParser: true,
-          // useUnifiedTopology: true,
-          // useCreateIndex: true,
-          // useFindAndModify: false,
-          // autoIndex: false,
-          // poolSize: 10, // Maintain up to 10 socket connections
-          // serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
-          // socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
-          // family: 4 // Use IPv4, skip trying IPv6
-        }
-      );
-      // then(async ()  => {
-          // console.log('Try connected to database');
+      await mongoose.connect(this.MONGO_URI as string).
+      then(async ()  => {
           await loginUsers();
           await populateInitialData();
           await insertInitialCities();
-          Scheduler.startScheduler().then(() => {
-            console.log('Scheduler started');
-          });
-          // console.log('Connected to database');
-      // }).catch((error) => {
-        // console.log('Error connecting to database: ', error);
-        // process.exit(1);
-      // });
+          // Scheduler.startScheduler().then(() => {
+          //   console.log('Scheduler started');
+          // });
+          console.log('Connected to database');
+      }).catch((error) => {
+        console.log('Error connecting to database: ', error);
+        process.exit(1);
+      });
     } catch (error) {
       console.log('Error connecting to database: ', error);
       process.exit(1);

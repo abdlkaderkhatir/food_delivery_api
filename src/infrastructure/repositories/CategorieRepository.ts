@@ -22,7 +22,7 @@ export class CategorieRepository implements ICategorieRepository {
 
     async getAllCategories(): Promise<Categorie[]> {
         // return this.categorieModel.find().exec();
-        const categories = await this.categorieModel.find()
+        const categories = await this.categorieModel.find();
         return categories as Categorie[];
         // return categories.map((categorie: any) => {
         //     return {
@@ -61,5 +61,10 @@ export class CategorieRepository implements ICategorieRepository {
             } as Categorie;
         }
         return null;
+    }
+
+    async getCategoriesByRestaurent(id: string): Promise<Categorie[]> {
+        const categories = await this.categorieModel.find({ restaurant_id : id });
+        return categories as Categorie[];
     }
 }

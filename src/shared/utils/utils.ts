@@ -23,7 +23,8 @@ export class Utils {
 
     static storage = multer.diskStorage({
         destination: function (req, file, cb) {
-            cb(null, './src/uploads/')
+            cb(null, './src/uploads/'); // save file in uploads folder you can change it as you want   cb(null, './src/uploads/' + file.originalname);
+
         },
         filename: function (req, file, cb) {
             //    const ext = file.mimetype.split('/')[1];
