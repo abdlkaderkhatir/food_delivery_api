@@ -6,6 +6,7 @@ import bannerRoutes from "./BannerRoutes";
 import userRoutes from "./UserRoutes";
 import restaurentRoutes from "./RestaurentRoutes";
 import categoryRoutes from "./CategorieRoutes";
+import itemRoutes from "./ItemRoutes";
 // import orderRoutes from "./OrderRoutes";
 
 
@@ -20,6 +21,7 @@ routes.use('/sync', syncRoutes);
 routes.use('/banners', bannerRoutes);
 routes.use('/restaurents', restaurentRoutes);
 routes.use('/categories', categoryRoutes);
+routes.use('/items', itemRoutes);
 
 
 

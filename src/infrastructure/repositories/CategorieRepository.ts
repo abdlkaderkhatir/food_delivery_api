@@ -64,7 +64,15 @@ export class CategorieRepository implements ICategorieRepository {
     }
 
     async getCategoriesByRestaurent(id: string): Promise<Categorie[]> {
-        const categories = await this.categorieModel.find({ restaurant_id : id });
+        const categories = await this.categorieModel.find({ restaurant_id : id } , { __v : 0 }).populate('restaurant_id') // also can use { __v: 0 } { name: 1 , _id: 1 , restaurant_id: 1 }
         return categories as Categorie[];
+    }
+
+    async findCategoryByCatIdAndRestaurentId(category_id: string , restaurant_id: string): Promise<Categorie | null> {
+        const categorie = await this.categorieModel.findOne({ _id: category_id , restaurant_id }).exec();
+        if (categorie) {
+            return categorie as Categorie;
+        }
+        return null;
     }
 }

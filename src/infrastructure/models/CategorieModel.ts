@@ -8,7 +8,7 @@ export interface ICategorieDocument extends Document , Omit<Categorie, '_id'> {
 
 
 const CategorieSchema = new Schema({
-    restaurant_id: { type: Schema.Types.ObjectId as any, ref: 'Restaurant', required: true },
+    restaurant_id: { type: Schema.Types.ObjectId as any, ref: 'Restaurent', required: true },
     name: { type: String, required: true , default: '' },
     createdAt: { type: Date, required: true , default: Date.now },
     updatedAt: { type: Date, required: true , default: Date.now },
