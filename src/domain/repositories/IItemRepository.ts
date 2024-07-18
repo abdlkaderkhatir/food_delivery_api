@@ -1,4 +1,5 @@
 import { Item } from "../entities/Item";
+import { Menu } from "../entities/Menu";
 
 
 
@@ -11,4 +12,5 @@ export interface IItemRepository {
     getItems(): Promise<Item[]>;
     updateItem(id: string, item: Partial<Item>): Promise<Item>;
     deleteItem(id: string): Promise<boolean>;
+    getMenuByRestaurent(id: string): Promise<Menu>;
 }

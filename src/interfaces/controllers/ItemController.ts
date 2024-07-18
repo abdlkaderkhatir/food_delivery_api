@@ -2,6 +2,7 @@ import { Request, Response } from "express";
 import { IItemRepository } from "../../domain/repositories/IItemRepository";
 import { IRestaurentRepository } from "../../domain/repositories/IRestaurentRepository";
 import { ICategorieRepository } from "../../domain/repositories/ICategorieRepository";
+import { MenuItem } from "../../domain/entities/Menu";
 
 
 export class ItemController {
@@ -117,6 +118,57 @@ export class ItemController {
                 return res.status(404).json({ message: "Item not found" });
             }
             res.status(204).json();
+        } catch (error : any) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+
+    async getMenuItemByRestaurent(req: Request, res: Response) {
+        try {
+            // this is the restaurant id
+            const id = req.params.id;
+
+            // fetch restaurant by id
+            const restaurant = await this.restaurentRepo.fetchOne(id);
+            if (!restaurant) {
+                return res.status(404).json({ message: "Restaurant not found" });
+            }
+
+            // fetch categories by restaurant id
+
+            const categories = await this.categorieRepo.getCategoriesByRestaurent(id);
+
+            // fetch items within categories by restaurant id
+
+            // in my item i have id of category and restaurant so i need to group items by category id populating category and restaurant
+
+
+            // const items = await this.itemRepo.getItemsByRestaurent(id);
+            // res.status(200).json(items);
+        } catch (error : any) {
+            res.status(500).json({ message: error.message });
+        }
+    }
+
+
+    async test(req: Request, res: Response) {
+        try {
+            // const id = req.params.id;
+            const menu = await this.itemRepo.getMenuByRestaurent('6696714265746588687aa01f');
+            // map over menu and categories and items
+            const items = menu.map((menu: MenuItem) => {
+                return {
+                    ...menu,
+                    items: menu.items.map((item: any) => {
+                        return {
+                            ...item,
+                            image : `${req.protocol}://${req.get('host')}/${item.image.replace(/\\/g, "/")}`
+                        }
+                    })
+                }
+            });
+            res.status(200).json(items);
         } catch (error : any) {
             res.status(500).json({ message: error.message });
         }

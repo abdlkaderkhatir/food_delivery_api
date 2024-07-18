@@ -21,12 +21,15 @@ router.post("/create-item", Utils.upload.single('image'), itemController.createI
 
 router.get("/", itemController.getItems.bind(itemController));
 
+router.get("/test", itemController.test.bind(itemController));
+
 router.get("/:id", itemController.getItem.bind(itemController));
 
 router.put("/:id", itemController.updateItem.bind(itemController));
 
 
 router.delete("/:id", itemController.deleteItem.bind(itemController));
+
 
 
 
