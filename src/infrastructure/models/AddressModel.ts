@@ -7,8 +7,8 @@ export interface IAdressDocument extends Document, Omit<Address, '_id'> {}
 
 const AddressSchema = new Schema({
     user_id: { type: Schema.Types.ObjectId as any, ref: 'User', required: true },
-    street: { type: String, required: false , default: '' },
-    city: { type: String, required: true , default: '' },
+    address: { type: String, required: true , default: '' },
+    city: { type: String, required: false , default: '' },
     state: { type: String, required: false , default: '' },
     country: { type: String, required: false , default: '' },
     zip: { type: String, required: false , default: '' },

@@ -21,24 +21,35 @@ export class AddressRepository implements IAddressRepository {
 
     }
 
-    async findAddressById(addressId: string): Promise<Address | null> {
-        const address = await this.addressModel.findById(addressId);
+    async findAddressById(addressId: string , userId: string): Promise<Address | null> {
+        const address = await this.addressModel.findOne({ _id: addressId, user_id: userId });
         return address as Address | null;
     }
 
     async findAddressByUserId(userId: string): Promise<Address | null> {
-        const address = await this.addressModel.findOne({ userId    });
+        const address = await this.addressModel.findOne({ user_id: userId });
         return address as Address | null; 
     }
 
-    async updateAddress(id: string, address: Partial<Address>): Promise<Address> {
-        const updatedAddress = await this.addressModel.findByIdAndUpdate(id, address, { new: true });
+    async updateAddress(addressId: string, userId: string ,  address: Partial<Address>): Promise<Address> {
+        // const updatedAddress = await this.addressModel.findByIdAndUpdate(addressId, address, { new: true });
+        const updatedAddress = await this.addressModel.findOneAndUpdate(
+            { _id: addressId , user_id: userId },
+            address,
+            { new: true }
+        );
         return updatedAddress?.toObject() as Address;
     }
 
-    async deleteAddress(addressId: string): Promise<boolean> {
-        const deletedAddress = await this.addressModel.findByIdAndDelete(addressId);
+    async deleteAddress(addressId: string , userId : string): Promise<boolean> {
+        const deletedAddress = await this.addressModel.findOneAndDelete({ _id: addressId, user_id: userId });
         return !!deletedAddress;
+    }
+
+
+    async getLimitedAddresses(userId: string , limit: number): Promise<Address[]> {
+        const addresses = await this.addressModel.find({ user_id: userId }).limit(limit);
+        return addresses.map(address => address.toObject());
     }
 
 }
