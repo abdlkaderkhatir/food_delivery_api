@@ -7,6 +7,7 @@ import userRoutes from "./UserRoutes";
 import restaurentRoutes from "./RestaurentRoutes";
 import categoryRoutes from "./CategorieRoutes";
 import itemRoutes from "./ItemRoutes";
+import addressRoutes from "./AddressRoutes";
 // import orderRoutes from "./OrderRoutes";
 
 
@@ -22,6 +23,8 @@ routes.use('/banners', bannerRoutes);
 routes.use('/restaurents', restaurentRoutes);
 routes.use('/categories', categoryRoutes);
 routes.use('/items', itemRoutes);
+routes.use('/addresses', addressRoutes);
+
 
 
 
