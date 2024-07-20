@@ -157,7 +157,87 @@ import { Order, OrderItem } from "../../domain/entities/Order";
 // Path: src/infrastructure/repositories/OrderItemRepository.ts
 // this repository is responsible for handling the OrderItem entity
 
+
+
+export class OrderRepository implements IOrderRepository {
+
+  private orderModel: Model<IOrderDocument>;
+  private orderItemModel: Model<IOrderItemDocument>;
+
+  constructor() {
+    this.orderModel = OrderModel;
+    this.orderItemModel = OrderItemModel;
+  }
+
+  async createOrder(order: Partial<Order>): Promise<Order> {
+    const newOrder = new this.orderModel(order);
+    await newOrder.save();
+    // const orderItems = await Promise.all((order.items ?? []).map(async item => {
+    //   const orderItem = new this.orderItemModel({ ...item, order_id: newOrder._id });
+    //   return orderItem.save();
+    // }));
+    return newOrder.toObject();
+
+  }
+
+  async updateOrder(order: Partial<Order>): Promise<Order> {
+    const updatedOrder = await this.orderModel.findByIdAndUpdate(order._id, order, { new: true });
+
+    if (!updatedOrder) {
+      throw new Error("Failed to update order.");
+    }
+
+    return updatedOrder.toObject();
+  }
+
+  async deleteOrder(orderId: string): Promise<boolean> {
+    const result = await this.orderModel.findByIdAndDelete(orderId);
+    return !!result;
+  }
+
+  async findOrderById(orderId: string): Promise<Order | null> {
+    const order = await this.orderModel.findById(orderId).populate('items').exec();
+
+    if (!order) {
+      return null;
+    }
+
+    return order.toObject();
+  }
+
+  async findOrdersByUserId(userId: string): Promise<Order[]> {
+    const orders = await this.orderModel.aggregate([
+      { $match: { user_id: userId } },
+      {
+        $lookup: {
+          from: 'orderitems',
+          localField: '_id',
+          foreignField: 'order_id',
+          as: 'items'
+        }
+      },  
+    ]);
+
+    return orders.map(order => order.toObject());
+  }
+
+  // async findOrdersByStatus(status: string): Promise<Order[]> {
+  //   const orders = await this.orderModel.find({ status }).populate('items').exec();
+
+  //   return orders.map(order => order.toObject());
+  // }
+
+  // async findOrdersByRestaurantId(restaurantId: string): Promise<Order[]> {
+  //   const orders = await this.orderModel.find({ restaurantId }).populate('items').exec();
+
+  //   return orders.map(order => order.toObject());
+  // }
+
+}
+
+
 export class OrderItemRepository implements IOrderItemRepository {
+
   private orderItemModel: Model<IOrderItemDocument>;
 
   constructor() {
@@ -165,13 +245,35 @@ export class OrderItemRepository implements IOrderItemRepository {
   }
 
   async create(orderItemData: Partial<OrderItem>): Promise<OrderItem> {
-    const newOrderItem = new this.orderItemModel(orderItemData);
-    await newOrderItem.save();
-    return newOrderItem.toObject();
+    const orderItem = new this.orderItemModel(orderItemData);
+    await orderItem.save();
+    return orderItem.toObject();
   }
 
   async findByOrderId(orderId: string): Promise<OrderItem[]> {
-    const orderItems = await this.orderItemModel.find({ orderId });
+    const orderItems = await this.orderItemModel.find({ order_id: orderId });
     return orderItems.map(orderItem => orderItem.toObject());
   }
+
+
+  async deleteItemsByOrderId(orderId: string): Promise<boolean> {
+    const result = await this.orderItemModel.deleteMany({ order_id: orderId });
+    return !!result;
+  }
+
+
+  // traditional way of deleting items by order id
+
+  // async deleteItemsByOrderId2(orderId: string): Promise<boolean> {
+  //   // get all order items by order id
+  //   const orderItems = await this.orderItemModel.find({ order_id: orderId });
+  //   // ensure that all order items are deleted
+  //   const result = await Promise.all(orderItems.map(async orderItem => {
+  //     return await this.orderItemModel.findByIdAndDelete(orderItem._id);
+  //   }));
+
+  //   return result.every(Boolean);
+  // }
+
+
 }
