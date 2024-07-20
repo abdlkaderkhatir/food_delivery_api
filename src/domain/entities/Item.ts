@@ -12,3 +12,5 @@ export interface Item {
     createdAt: Date;
     updatedAt: Date;
 }
+
+// status : 1 | 0

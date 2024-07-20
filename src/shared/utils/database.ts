@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { log } from 'console';
-// import { populateInitialData } from '../initialData';
+import { populateInitialData } from '../initialData';
 import Scheduler from '../../application/sync/Scheduler';
 import { loginUsers } from '../initialUserData';
 import {config} from "../../config"
@@ -33,7 +33,7 @@ export class Database {
       await mongoose.connect(this.MONGO_URI as string).
       then(async ()  => {
           await loginUsers();
-          // await populateInitialData();
+          await populateInitialData();
           await insertInitialCities();
           // Scheduler.startScheduler().then(() => {
           //   console.log('Scheduler started');
