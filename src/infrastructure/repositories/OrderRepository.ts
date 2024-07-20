@@ -1,162 +1,7 @@
-import { Model } from "mongoose";
+import mongoose, { Model } from "mongoose";
 import { IOrderItemRepository, IOrderRepository } from "../../domain/repositories/IOrderRepository";
 import { IOrderDocument, IOrderItemDocument, OrderItemModel, OrderModel } from "../models/OrderModel";
 import { Order, OrderItem } from "../../domain/entities/Order";
-
-
-// export class OrderRepository implements IOrderRepository {
-
-//   private  orderModel: Model<IOrderDocument>;
-//   private  orderItemModel: Model<IOrderItemDocument>;
-
-//   constructor() {
-//     this.orderModel = OrderModel;
-//     this.orderItemModel = OrderItemModel;
-//   }
-
-  // async getOrdersWithDetails(userId: string): Promise<any[]> {
-  //   const orders = await this.orderModel.find({ userId }).populate('items').exec(); // what is the purpose of exec() here?
-  //   const ordersWithDetails = await Promise.all(orders.map(async order => {
-  //     const items = await Promise.all(order.items.map(async item => {
-  //       const food = await this.foodRepo.findById(item.foodId);
-  //       return {
-  //         ...item,
-  //         food,
-  //       };
-  //     }));
-  //     return {
-  //       ...order.toObject(),
-  //       items,
-  //     };
-  //   }));
-
-  //   return ordersWithDetails;
-  // }
-
-//   async create(order: Partial<Order>): Promise<Order> {
-//     const orderItems = await Promise.all((order.items ?? []).map(async item => {
-//       const orderItem = new this.orderItemModel(item);
-//       return orderItem.save();
-//     });
-
-//     const newOrder = new this.orderModel({
-//         ...order,
-//         items: orderItems.map(item => item._id),
-//     });
-
-//     await newOrder.save();
-
-//     return newOrder.toObject();
-//   }
-
-  
-  
-// }
-
-
-
-
-// export class OrderRepository implements IOrderRepository {
-
-//   private orderModel: Model<IOrderDocument>;
-//   private orderItemModel: Model<IOrderItemDocument>;
-
-//   constructor() {
-//     this.orderModel = OrderModel;
-//     this.orderItemModel = OrderItemModel;
-//   }
-
-
-//   async getOrdersWithDetails(userId: string): Promise<any[]> {
-//     const orders = await this.orderModel.find({ userId }).populate('items').exec(); // what is the purpose of exec() here?
-//     const ordersWithDetails = await Promise.all(orders.map(async order => {
-//       const items = await Promise.all(order.items.map(async item => {
-//         const food = await this.foodRepo.findById(item.foodId);
-//         return {
-//           ...item,
-//           food,
-//         };
-//       }));
-//       return {
-//         ...order.toObject(),
-//         items,
-//       };
-//     }));
-
-//     return ordersWithDetails;
-//   }
-
-  // async create(order: Partial<Order>): Promise<Order> {
-
-    // const orderItems = await Promise.all((order.items ?? []).map(async item => {
-    //   const orderItem = new this.orderItemModel(item);
-    //   return orderItem.save();
-    // }));
-
-
-    // const newOrder = new this.orderModel({
-    //     ...order,
-    //     items: orderItems.map(item => item._id),
-    // });
-
-
-    // await newOrder.save();
-
-    // return newOrder.toObject();
-  // }
-
-  // async findById(id: string): Promise<Order | null> {
-  //   const order = await this.orderModel.findById(id).populate('items').exec();
-
-  //   if (!order) {
-  //     return null;
-  //   }
-
-  //   return order.toObject();
-  // }
-
-  // async findByUserId(userId: string): Promise<Order[]> {
-  //   const orders = await this.orderModel.find({ userId }).populate('items').exec();
-
-  //   return orders.map(order => order.toObject());
-  // }
-
-//   async update(order: Order): Promise<Order> {
-    // const orderItems = await Promise.all(order.items.map(async item => {
-    //   if (item.foodId) {
-    //     return this.orderItemModel.findByIdAndUpdate(item.foodId, item, { new: true });
-    //   }
-
-    //   const orderItem = new this.orderItemModel(item);
-    //   return orderItem.save();
-    // }));
-
-    // const updatedOrder = await this.orderModel.findByIdAndUpdate(order.id, {
-    //   ...order,
-    //   items: orderItems.map(item => item),
-    // }, { new: true });
-
-    // if (updatedOrder) {
-    //   return updatedOrder.toObject();
-    // } else {
-    //   throw new Error("Failed to update order.");
-    // }
-//   }
-
-  // async delete(id: string): Promise<void> {
-  //   await this.orderModel.findByIdAndDelete(id);
-  // }
-
-//   async findAll(): Promise<Order[]> {
-        // const orders = await this.orderModel.find().populate('items').exec();
-        // return orders.map(order => order.toObject());
-//   }   
-
-// }
-
-// Path: src/infrastructure/repositories/OrderItemRepository.ts
-// this repository is responsible for handling the OrderItem entity
-
 
 
 export class OrderRepository implements IOrderRepository {
@@ -207,7 +52,7 @@ export class OrderRepository implements IOrderRepository {
 
   async findOrdersByUserId(userId: string): Promise<Order[]> {
     const orders = await this.orderModel.aggregate([
-      { $match: { user_id: userId } },
+      { $match: { user_id:  new mongoose.Types.ObjectId(userId) } },
       {
         $lookup: {
           from: 'orderitems',
@@ -216,9 +61,26 @@ export class OrderRepository implements IOrderRepository {
           as: 'items'
         }
       },  
+      // { $unwind: '$items' },
+      // {
+      //   $project: {
+      //     user_id: 1,
+      //     restaurant_id: 1,
+      //     status: 1,
+      //     total_price: 1,
+      //     delivery_fee: 1,
+      //     grand_total: 1,
+      //     delivery_address: 1,
+      //     payment_method: 1,
+      //     payment_status: 1,
+      //     instructions: 1,
+      //     createdAt: 1,
+      //     updatedAt: 1,
+      //     items: 1
+      //   }
+      // }
     ]);
-
-    return orders.map(order => order.toObject());
+    return orders.map(order => order);
   }
 
   // async findOrdersByStatus(status: string): Promise<Order[]> {
