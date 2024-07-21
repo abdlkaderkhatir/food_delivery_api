@@ -20,6 +20,7 @@ router.post('/', verifyToken , orderController.placeOrder.bind(orderController))
 // router.get('/orders/:id', orderController.getOrderById.bind(orderController));
 
 router.get('/user/:userId', orderController.getOrdersByUserId.bind(orderController));
+router.get('/user/:userId/pagination', orderController.getOrdersByUserWithPagination.bind(orderController));
 // router.put('/orders', orderController.updateOrder.bind(orderController));
 
 

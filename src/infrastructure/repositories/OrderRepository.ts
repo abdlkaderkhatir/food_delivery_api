@@ -83,18 +83,29 @@ export class OrderRepository implements IOrderRepository {
     return orders.map(order => order);
   }
 
-  // async findOrdersByStatus(status: string): Promise<Order[]> {
-  //   const orders = await this.orderModel.find({ status }).populate('items').exec();
 
-  //   return orders.map(order => order.toObject());
-  // }
+  async getOrdersByPagination(userId: string, page: number, limit: number): Promise<Order[]> {
+    const orders = await this.orderModel.aggregate([
+      { $match: { user_id:  new mongoose.Types.ObjectId(userId) } },
+      {
+        $lookup: {
+          from: 'orderitems',
+          localField: '_id',
+          foreignField: 'order_id',
+          as: 'items'
+        }
+      },  
+      { $skip: (page - 1) * limit },
+      { $limit: limit }
+    ]);
+    return orders.map(order => order);
+  }
 
-  // async findOrdersByRestaurantId(restaurantId: string): Promise<Order[]> {
-  //   const orders = await this.orderModel.find({ restaurantId }).populate('items').exec();
+  async countOrders(userId: string): Promise<number> {
+    return await this.orderModel.countDocuments({ user_id: userId });
+  }
 
-  //   return orders.map(order => order.toObject());
-  // }
-
+ 
 }
 
 

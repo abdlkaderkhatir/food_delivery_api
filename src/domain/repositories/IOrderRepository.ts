@@ -8,6 +8,8 @@ export interface IOrderRepository {
     deleteOrder(orderId: string): Promise<boolean>;
     findOrderById(orderId: string): Promise<Order | null>;
     findOrdersByUserId(userId: string): Promise<Order[]>;
+    getOrdersByPagination(userId: string, page: number, limit: number): Promise<Order[]>;
+    countOrders(userId: string): Promise<number>;
     // findOrdersByStatus(status: string): Promise<Order[]>;
     // findOrdersByRestaurantId(restaurantId: string): Promise<Order[]>;
 }

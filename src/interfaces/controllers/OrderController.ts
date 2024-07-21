@@ -58,5 +58,31 @@ export class OrderController {
             res.status(400).json({ message: error.message });
         }
     }
+
+
+    // get Orders By User with pagination
+
+    async getOrdersByUserWithPagination(req: Request, res: Response) {
+        try {
+            const userId = req.params.userId;
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const totalOrders = await this.orderRepository.countOrders(userId);
+            const totalPages = Math.ceil(totalOrders / limit);
+
+            if (page > totalPages) {
+                return res.status(400).json({ message: 'Page out of range' });
+            }
+
+            const orders = await this.orderRepository.getOrdersByPagination(userId, page, limit);
+            res.status(200).json({
+                orders,
+                totalPages,
+                currentPage: page
+            });
+        } catch (error : any) {
+            res.status(400).json({ message: error.message });
+        }
+    }
    
 }
