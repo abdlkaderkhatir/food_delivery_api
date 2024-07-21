@@ -14,6 +14,7 @@ const restaurentController = new RestaurentController(restaurentRepo , categoryR
 
 
 router.get('/', restaurentController.getAllRestaurents.bind(restaurentController));
+router.get('/pagination', restaurentController.getAllRestaurentsPagination.bind(restaurentController));
 // near restuarents
 router.get('/nearst-restaurent', restaurentController.getNearRestaurents.bind(restaurentController));
 router.post('/create', verifyToken , adminRole ,restaurentController.createRestaurent.bind(restaurentController));

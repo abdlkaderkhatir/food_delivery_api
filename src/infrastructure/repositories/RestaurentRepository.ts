@@ -21,6 +21,24 @@ export class RestaurentRepository implements IRestaurentRepository {
         } 
     }
 
+    async countRestaurents(): Promise<number> {
+        try {
+            return this.restaurentModel.countDocuments();
+        } catch (error) {
+            throw error;
+        }
+    }
+
+
+    async getAllRestaurentsPagination(page: number, limit: number): Promise<Restaurent[]> {
+        try {
+            const restaurents = await this.restaurentModel.find().skip((page - 1) * limit).limit(limit);
+            return restaurents.map(restaurent => restaurent.toObject() as Restaurent);
+        } catch (error) {
+            throw error;
+        }
+    }
+
     async getNearRestaurents(lat: string, long: string): Promise<Restaurent[]> {
         try {
             return [];

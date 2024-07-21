@@ -25,6 +25,27 @@ export class RestaurentController {
         }
     }
 
+    // get All Restaurent Pagination
+    async getAllRestaurentsPagination(req: Request, res: Response) {
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const totalRestaurents = await this.restaurentRepo.countRestaurents();
+            const totalPage = Math.ceil(totalRestaurents / limit);
+
+            if (page > totalPage) {
+                return res.status(400).json({ message: 'Page out of range' });
+            }
+
+            const restaurents = await this.restaurentRepo.getAllRestaurentsPagination(page, limit);
+            res.status(200).json({ restaurents, totalPage , totalRestaurents });
+            
+        } catch (error) {
+            console.log(error);
+            res.status(500).json({ message: 'Internal server error' });
+        }
+    }
+
     async getNearRestaurents(req: Request, res: Response) {
         try {
             const { lat, long  } = req.query;
@@ -42,6 +63,25 @@ export class RestaurentController {
             res.status(500).json({ message: 'Internal server error' });
         }
     }
+
+    // get Nearst Restaurents Pagination
+    // async getNearRestaurentsPagination(req: Request, res: Response) {
+    //     try {
+    //         const { lat, long , page , limit } = req.query;
+    //         if (!lat || !long) {
+    //             return res.status(400).json({ message: 'Latitude and longitude are required' });
+    //         }
+    //         const restaurents = await this.restaurentRepo.getAllRestaurents();
+    //         const nearstRestaurent = await  LocationService.getNearRestaurents(restaurents, parseFloat(long as string), parseFloat(lat as string));
+    //         const start = (parseInt(page as string) - 1) * parseInt(limit as string);
+    //         const end = start + parseInt(limit as string);
+    //         const paginatedRestaurents = nearstRestaurent.slice(start, end);
+    //         res.status(200).json(paginatedRestaurents ?? []);
+    //     } catch (error) {
+    //         console.log(error);
+    //         res.status(500).json({ message: 'Internal server error' });
+    //     }
+    // }
 
 
     async searchNearstRestaurents(req: Request, res: Response) {

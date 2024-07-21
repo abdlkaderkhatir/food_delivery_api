@@ -8,4 +8,6 @@ export interface IRestaurentRepository {
     fetchByName(name: string): Promise<Restaurent | null>;
     getNearRestaurents(lat: string, long: string): Promise<Restaurent[]>;
     searchRestaurents(search: string): Promise<Restaurent[]>;
+    getAllRestaurentsPagination(page: number, limit: number): Promise<Restaurent[]>;
+    countRestaurents(): Promise<number>;
 }
