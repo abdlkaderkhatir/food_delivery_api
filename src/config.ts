@@ -6,7 +6,7 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
 export const config = {
     jwtSecret: process.env.JWT_SECRET as string,
-    port: process.env.PORT || 3333,
+    port: process.env.PORT , //|| 3333,
     db: {
         host: process.env.DB_HOST || 'localhost',
         user: process.env.DB_USER || 'root',

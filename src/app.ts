@@ -30,29 +30,6 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 
 
-// const storage = multer.diskStorage({
-//   destination: function (req, file, cb) {
-//     cb(null, 'uploads/')
-//   },
-//   filename: function (req, file, cb) {
-//     cb(null, `${Date.now()}-${file.originalname}`)
-//   }
-// });
-
-
-// const upload = multer({ 
-//   storage: storage ,
-//   limits: { fileSize: 1024 * 1024 * 5 }, // 5MB
-//   fileFilter: (req, file, cb) => {
-//     if (file.mimetype === 'image/jpeg' || file.mimetype === 'image/png') {
-//       cb(null, true);
-//     } else {
-//       cb(new Error('File type not supported'));
-//     }
-//   }
-// });
-
-
 // Single file upload
 
 // app.post('/upload', upload.single('file'), (req: Request, res: Response) => {
@@ -77,18 +54,7 @@ app.use('/src/uploads', express.static('src/uploads'));
 // app.use('/src/uploads', express.static(path.join(__dirname, 'src/uploads')));
 // app.use('/src/uploads', express.static(path.join(__dirname, '../uploads')));
 
-
-// routes
-// app.use('/api', authRoutes);
-// app.use('/api', foodRoutes);
-// app.use('/api', syncRoutes);
-// app.use('/api', bannerRoutes);
-// app.use('/api', orderRoutes);
 app.use('/api', indexRoutes);
 
-
-app.get('/', (req, res) => {
-  res.send('Food Delivery API');
-});
 
 export default app;

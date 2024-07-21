@@ -23,6 +23,8 @@ router.get('/' , addressController.getAddresses.bind(addressController));
  
 router.get('/user/', verifyToken , addressController.findAddressByUser.bind(addressController));
 
+router.get('/user/pagination', verifyToken , addressController.getAddressesUsesByPagination.bind(addressController));
+
 // check address pass lon and lat with query params
 
 

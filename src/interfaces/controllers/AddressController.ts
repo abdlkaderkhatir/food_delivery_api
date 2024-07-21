@@ -58,12 +58,37 @@ export class AddressController {
         }
     }
 
-
     async getLimitedAddresses(req : CustomRequest , res : Response){
         try {
             const limit = req.query.limit as string;
             const addresses = await this.addressRepository.getLimitedAddresses(req.user.id , parseInt(limit));
             res.status(200).json(addresses);
+        } catch (error : any) {
+            res.status(400).json({ message: error.message });
+        }
+    }
+
+
+    async getAddressesUsesByPagination(req : CustomRequest , res : Response){
+        try {
+            const page = parseInt(req.query.page as string) || 1;
+            const limit = parseInt(req.query.limit as string) || 10;
+            const startIndex = (page - 1) * limit;
+            const endIndex = page * limit;
+            const totalAddresses = await this.addressRepository.countAddresses(req.user.id);
+            const totalPages = Math.ceil(totalAddresses / limit);
+            // check if the page is greater than total pages
+            if (page > totalPages) {
+                // throw new Error("Page not found");
+                return res.status(400).json({ message: "Page not found" });
+            }
+
+            const address = await this.addressRepository.getAddressesByPagination(req.user.id , page , limit);
+            res.status(200).json({ 
+                address , 
+                currentPage: page,
+                totalPages: totalPages,
+            });
         } catch (error : any) {
             res.status(400).json({ message: error.message });
         }

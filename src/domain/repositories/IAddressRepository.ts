@@ -9,4 +9,6 @@ export interface IAddressRepository {
     updateAddress(addressId : string, userId: string , address: Partial<Address>): Promise<Address>;
     deleteAddress(addressId: string , userId : string): Promise<boolean>;
     getLimitedAddresses(userId: string , limit: number): Promise<Address[]>;
+    getAddressesByPagination(userId: string , page: number , limit: number): Promise<Address[]>;
+    countAddresses(userId: string): Promise<number>;
 }

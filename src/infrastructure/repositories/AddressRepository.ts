@@ -31,6 +31,11 @@ export class AddressRepository implements IAddressRepository {
         return address as Address | null; 
     }
 
+    async countAddresses(userId: string): Promise<number> {
+        const count = await this.addressModel.countDocuments({ user_id: userId });
+        return count;
+    }
+
     async updateAddress(addressId: string, userId: string ,  address: Partial<Address>): Promise<Address> {
         // const updatedAddress = await this.addressModel.findByIdAndUpdate(addressId, address, { new: true });
         const updatedAddress = await this.addressModel.findOneAndUpdate(
@@ -49,6 +54,12 @@ export class AddressRepository implements IAddressRepository {
 
     async getLimitedAddresses(userId: string , limit: number): Promise<Address[]> {
         const addresses = await this.addressModel.find({ user_id: userId }).limit(limit);
+        return addresses.map(address => address.toObject());
+    }
+
+
+    async getAddressesByPagination(userId: string , page: number , limit: number): Promise<Address[]> {
+        const addresses = await this.addressModel.find({ user_id: userId }).skip((page - 1) * limit).limit(limit);
         return addresses.map(address => address.toObject());
     }
 
