@@ -1,6 +1,7 @@
 import { User } from "../domain/entities/User";
 import { config } from "../config";
 import jwt from 'jsonwebtoken';
+import { log } from "console";
 
 
 export class AuthUtils {
@@ -56,20 +57,22 @@ export class AuthUtils {
 
     static verifyToken(token: string, secret: string): any {
         try {
-            return jwt.verify(token, secret);
+            return jwt.verify(token, secret , { algorithms: ['HS256'] });
         } catch (error) {
-            return null;
+            throw new Error("Token is not valid.");
         }
     }
 
 
     static verifyAccessToken(token: string): any {
-        return this.verifyToken(token, config.accessTokenSecret);
+        console.log("token",token);
+        console.log("config.accessTokenSecret",config.accessTokenSecret );
+        return AuthUtils.verifyToken(token, config.accessTokenSecret as string);
     }
 
 
     static verifyRefreshToken(token: string): any {
-        return this.verifyToken(token, config.refreshTokenSecret);
+        return AuthUtils.verifyToken(token, config.refreshTokenSecret as string);
     }
 
 }

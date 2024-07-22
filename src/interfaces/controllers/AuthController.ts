@@ -10,6 +10,7 @@ import { IOtpRepository } from "../../domain/repositories/IOtpRepository";
 import { Otp } from "../../domain/entities/Otp";
 import { EmailService } from "../../infrastructure/services/EmailService";
 import { log } from "console";
+import { AuthUtils } from "../../utils/auth_utils";
 
 
 // dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
@@ -58,9 +59,16 @@ export class AuthController {
             await emailService.sendEmail(user.email, 'OTP Verification', `Your OTP is ${otp}`);
             
 
-            const token = jwt.sign({ id: user._id , role : user.role }, config.jwtSecret as string);
+            // const token = jwt.sign({ id: user._id , role : user.role }, config.jwtSecret as string);
 
-            return res.status(201).json({ token, user });
+            const accessToken =  AuthUtils.genearateAccessToken(user);
+            const refreshToken = AuthUtils.genearateRefreshToken(user);
+
+            return res.status(201).json({ 
+                token : accessToken ,
+                refreshToken : refreshToken,
+                user
+            });
         } catch (error ) {
             return res.status(400).json({ message: error });
         }
@@ -189,8 +197,41 @@ export class AuthController {
             // console.log('[ID]', user.id);
             
 
-            const token = jwt.sign({ id: user._id , role : user.role }, config.jwtSecret as string);
-            return res.status(200).json({ token , user });
+            // const token = jwt.sign({ id: user._id , role : user.role }, config.jwtSecret as string);
+            const accessToken =  AuthUtils.genearateAccessToken(user);
+            const refreshToken = AuthUtils.genearateRefreshToken(user);
+            return res.status(200).json({
+                token : accessToken,
+                refreshToken : refreshToken,
+                user
+            });
+        } catch (error) {
+            return res.status(400).json({ message: error });
+        }
+    }
+    // TODO: Implement refresh token method
+    async refreshToken(req: Request, res: Response) {
+        try {
+            const { refreshToken } = req.body;
+            // const decoded = jwt.verify(refreshToken, config.refreshTokenSecret as string) as any;
+            const decoded = AuthUtils.verifyRefreshToken(refreshToken);
+            if (!decoded) {
+                return res.status(401).json({ message: 'Invalid refresh token' });
+            }
+
+            const user = await this.userRepository.findById(decoded.id);
+            if (!user) {
+                return res.status(404).json({ message: 'User not found' });
+            }
+
+            const accessToken =  AuthUtils.genearateAccessToken(user);
+            const newRefreshToken = AuthUtils.genearateRefreshToken(user);
+            return res.status(200).json({
+                token : accessToken,
+                refreshToken : newRefreshToken,
+                user
+            });
+            
         } catch (error) {
             return res.status(400).json({ message: error });
         }

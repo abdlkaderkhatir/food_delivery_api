@@ -24,6 +24,9 @@ router.post('/resend-otp', authController.resendOTP.bind(authController));
 // login
 router.post('/login', authController.login.bind(authController));
 
+// refresh token
+router.post('/refresh-token', authController.refreshToken.bind(authController));
+
 // reset password
 router.post('/reset-password', authController.resetPassword.bind(authController));
 
