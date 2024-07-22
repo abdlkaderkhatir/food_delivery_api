@@ -1,11 +1,11 @@
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import { log } from 'console';
-import { populateInitialData } from '../initialData';
-import Scheduler from '../../application/sync/Scheduler';
-import { loginUsers } from '../initialUserData';
-import {config} from "../../config"
-import { insertInitialCities } from '../initialCities';
+import { populateInitialData } from '../shared/initialData';
+import Scheduler from '../application/sync/Scheduler';
+import { loginUsers } from '../shared/initialUserData';
+import {config} from "../config"
+import { insertInitialCities } from '../shared/initialCities';
 
 // dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 

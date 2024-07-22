@@ -3,7 +3,7 @@ import { BannerController } from "../controllers/BannerController";
 import { BannerRepository } from "../../infrastructure/repositories/BannerRepository";
 import verifyToken from "../../middleware/authMiddleware";
 import adminRole from "../../middleware/adminRole";
-import {Utils} from "../../shared/utils/utils";
+import {Utils} from "../../utils/utils";
 
 
 const router = Router();

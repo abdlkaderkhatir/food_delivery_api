@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 import {config} from '../../config';
-import { OTP } from '../../shared/utils/otp';
+import { OTP } from '../../utils/otp';
 import { IOtpRepository } from "../../domain/repositories/IOtpRepository";
 import { Otp } from "../../domain/entities/Otp";
 import { EmailService } from "../../infrastructure/services/EmailService";

@@ -3,7 +3,7 @@ import { ItemRepository } from "../../infrastructure/repositories/ItemRepository
 import { ItemController } from "../controllers/ItemController";
 import { CategorieRepository } from "../../infrastructure/repositories/CategorieRepository";
 import { RestaurentRepository } from "../../infrastructure/repositories/RestaurentRepository";
-import { Utils } from "../../shared/utils/utils";
+import { Utils } from "../../utils/utils";
 
 
 

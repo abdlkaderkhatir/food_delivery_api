@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { access } from 'fs';
 import { mongo } from 'mongoose';
 
 dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
@@ -6,6 +7,10 @@ dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
 
 export const config = {
     jwtSecret: process.env.JWT_SECRET as string,
+    accessTokenSecret: process.env.ACCESS_TOKEN_SECRET as string,
+    accessTokenExpiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN as string,
+    refreshTokenSecret: process.env.REFRESH_TOKEN_SECRET as string,
+    refreshTokenExpiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN as string,
     port: process.env.PORT , //|| 3333,
     db: {
         host: process.env.DB_HOST || 'localhost',

@@ -1,6 +1,6 @@
 import express, { Request, Response } from 'express';
 import multer  from 'multer';
-import {Database}  from './shared/utils/database';
+import {Database}  from './utils/database';
 // import foodRoutes from './interfaces/routes/FoodRoutes';
 // import authRoutes from './interfaces/routes/AuthRoutes';
 // import syncRoutes from './interfaces/routes/SyncRoutes';
