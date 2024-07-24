@@ -27,6 +27,10 @@ export const config = {
         port: process.env.SOCKET_PORT || 3334
     },
     redis: {
-        url: process.env.REDIS_URL
+        url: process.env.REDIS_URL,
+        url_redis: process.env.REDIS_URL_REMOT,
+        port_redis: process.env.REDIS_PORT_REMOT,
+        password_redis: process.env.REDIS_PASSWORD_REMOT,
+        user_redis: process.env.REDIS_USER_REMOT
     }
 };

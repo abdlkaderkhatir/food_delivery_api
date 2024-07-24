@@ -15,9 +15,11 @@ class RedisService {
     constructor() {
         this.client = createClient({
             //  url: config.redis.url,
+            username: config.redis.user_redis,
+            password: config.redis.password_redis,
              socket : {
-                host: '127.0.0.1',
-                port: 6379
+                host: config.redis.url_redis,
+                port: parseInt(config.redis.port_redis as string),
             }
         });
         this.connect(); 
@@ -25,63 +27,63 @@ class RedisService {
 
     // adding connection to redis
     async connect(): Promise<void> {
-
-        this.client.on("connect", () => {
-             console.log("Connected to Redis");
+        this.client.on("connect", () => { 
+            console.log("Connected to Redis") 
+            this.set("test", "test");
         });
-        // 
+
         this.client.on("error", (error: any) => {
           console.log("Error connecting to Redis", error);
+          throw error;
         });
-
         await this.client.connect();
     }
     // (async () => {await this.client.connect()})(); i tryed to added this in the constructor but it did not work
 
-        async set(key: string, value: string, expiry?: number) {
-            let options = {};
+    async set(key: string, value: string, expiry?: number) {
+        let options = {};
 
-            if (expiry === undefined) {
-                await this.client.set(key, value);
-                return;
-            }
-
-            options = {
-                EX: expiry,
-            };
-
-            await this.client.set(key, value, options);
+        if (expiry === undefined) {
+            await this.client.set(key, value);
+            return;
         }
 
-        async get(key: string): Promise<string | null> {
-            return this.client.get(key);
-        }
+        options = {
+            EX: expiry,
+        };
 
-        async del(key: string) {
-            await this.client.del(key);
-        }
+        await this.client.set(key, value, options);
+    }
 
-        async blacklistToken(token: string, expiry: number) {
-            await this.set(`blacklist_${token}`, "true", expiry);
-        }
+    async get(key: string): Promise<string | null> {
+        return this.client.get(key);
+    }
 
-        async isTokenBlacklisted(token: string): Promise<boolean> {
-            const result = await this.get(`blacklist_${token}`);
-            return result !== null;
-        }
+    async del(key: string) {
+        await this.client.del(key);
+    }
+
+    async blacklistToken(token: string, expiry: number) {
+        await this.set(`blacklist_${token}`, "blacklisted", expiry);
+    }
+
+    async isTokenBlacklisted(token: string): Promise<boolean> {
+        const result = await this.get(`blacklist_${token}`);
+        return result !== null;
+    }
 
 
-        // public delete(key: string): void {
-        //     this.client.del(key);
-        // }
+    // public delete(key: string): void {
+    //     this.client.del(key);
+    // }
 
-        // public exists(key: string): boolean {
-        //     return this.client.exists(key);
-        // }
+    // public exists(key: string): boolean {
+    //     return this.client.exists(key);
+    // }
 
-        // public expire(key: string, seconds: number): void {
-        //     this.client.expire(key, seconds);
-        // }
+    // public expire(key: string, seconds: number): void {
+    //     this.client.expire(key, seconds);
+    // }
 }
 
 export default RedisService;

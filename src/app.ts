@@ -13,9 +13,10 @@ import RedisService from './infrastructure/services/RedisService';
 const app : express.Application = express();
 const db = Database.getInstance();
 
-db.connectToDatabase();
+db.connectToDatabase().then(() => {
+  RedisService.getInstance();
+})
 
-RedisService.getInstance();
 // RedisService.getInstance().connectToRedis();
 
 // cors
