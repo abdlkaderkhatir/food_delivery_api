@@ -25,5 +25,8 @@ export const config = {
     },
     socket: {
         port: process.env.SOCKET_PORT || 3334
+    },
+    redis: {
+        url: process.env.REDIS_URL
     }
 };

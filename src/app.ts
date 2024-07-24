@@ -7,12 +7,16 @@ import {Database}  from './utils/database';
 // import bannerRoutes from './interfaces/routes/BannerRoutes';
 import indexRoutes from './interfaces/routes/index';
 import path from 'path';
+import RedisService from './infrastructure/services/RedisService';
 // import orderRoutes from './interfaces/routes/OrderRoutes';
 
 const app : express.Application = express();
 const db = Database.getInstance();
 
 db.connectToDatabase();
+
+RedisService.getInstance();
+// RedisService.getInstance().connectToRedis();
 
 // cors
 // app.use((req, res, next) => {
