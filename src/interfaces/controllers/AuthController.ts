@@ -62,7 +62,7 @@ export class AuthController {
             // const token = jwt.sign({ id: user._id , role : user.role }, config.jwtSecret as string);
 
             const accessToken =  AuthUtils.genearateAccessToken(user);
-            const refreshToken = AuthUtils.genearateRefreshToken(user);
+            const refreshToken = await AuthUtils.genearateRefreshToken(user);
 
             return res.status(201).json({ 
                 token : accessToken ,
@@ -199,7 +199,7 @@ export class AuthController {
 
             // const token = jwt.sign({ id: user._id , role : user.role }, config.jwtSecret as string);
             const accessToken =  AuthUtils.genearateAccessToken(user);
-            const refreshToken = AuthUtils.genearateRefreshToken(user);
+            const refreshToken = await AuthUtils.genearateRefreshToken(user);
             return res.status(200).json({
                 token : accessToken,
                 refreshToken : refreshToken,
@@ -214,7 +214,7 @@ export class AuthController {
         try {
             const { refreshToken } = req.body;
             // const decoded = jwt.verify(refreshToken, config.refreshTokenSecret as string) as any;
-            const decoded = AuthUtils.verifyRefreshToken(refreshToken);
+            const decoded = await AuthUtils.verifyRefreshToken(refreshToken);
             if (!decoded) {
                 return res.status(401).json({ message: 'Invalid refresh token' });
             }
@@ -225,7 +225,7 @@ export class AuthController {
             }
 
             const accessToken =  AuthUtils.genearateAccessToken(user);
-            const newRefreshToken = AuthUtils.genearateRefreshToken(user);
+            const newRefreshToken = await AuthUtils.genearateRefreshToken(user);
             return res.status(200).json({
                 token : accessToken,
                 refreshToken : newRefreshToken,

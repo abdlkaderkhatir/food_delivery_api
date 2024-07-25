@@ -2,6 +2,7 @@ import { User } from "../domain/entities/User";
 import { config } from "../config";
 import jwt from 'jsonwebtoken';
 import { log } from "console";
+import RedisService from "../infrastructure/services/RedisService";
 
 
 export class AuthUtils {
@@ -40,17 +41,24 @@ export class AuthUtils {
     }
 
 
-    static genearateRefreshToken(user : Partial<User>): string {
-        const token = jwt.sign(
-            {
-                id: user._id,
-                email: user.email,
-                role: user.role
-            }, 
-            config.refreshTokenSecret, 
-            { expiresIn: config.refreshTokenExpiresIn }
-        );
-        return token;
+    static async genearateRefreshToken(user : Partial<User>): Promise<string> {
+        try {
+            const token = jwt.sign(
+                {
+                    id: user._id,
+                    email: user.email,
+                    role: user.role
+                }, 
+                config.refreshTokenSecret, 
+                { expiresIn: config.refreshTokenExpiresIn }
+            );
+            const redisService = RedisService.getInstance();
+            await redisService.setToken(user._id as string, token, 365 * 24 * 60 * 60);
+            return token;
+        } catch (error) {
+            console.log("error",error);
+            throw new Error("Token is not valid.");
+        }
     }
 
 
@@ -71,8 +79,19 @@ export class AuthUtils {
     }
 
 
-    static verifyRefreshToken(token: string): any {
-        return AuthUtils.verifyToken(token, config.refreshTokenSecret as string);
+    static async verifyRefreshToken(token: string): Promise<any> {
+        // return AuthUtils.verifyToken(token, config.refreshTokenSecret as string);
+        try {
+            const decoded : any = jwt.verify(token, config.refreshTokenSecret as string, { algorithms: ['HS256'] });
+            const redisService = RedisService.getInstance();
+            const result = await redisService.getToken(decoded.id as string);
+            if (result !== token) {
+                throw new Error("Unauthorized access.");
+            }
+            return decoded;
+        } catch (error) {
+            throw new Error("Token is not valid.");
+        }
     }
 
 }
