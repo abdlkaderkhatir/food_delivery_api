@@ -73,6 +73,10 @@ class RedisService {
         return result;
     }
 
+    async delToken(userId: string) {
+        await this.del(`client_${userId}`);
+    }
+
 
     // public delete(key: string): void {
     //     this.client.del(key);

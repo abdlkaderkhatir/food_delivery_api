@@ -2,6 +2,7 @@ import { Router } from "express";
 import { AuthController } from "../controllers/AuthController";
 import { UserRepository } from "../../infrastructure/repositories/UserRepository";
 import { OtpRepository } from "../../infrastructure/repositories/OtpRepository";
+import verifyToken from "../../middleware/authMiddleware";
 
 
 
@@ -39,7 +40,7 @@ router.post('/forgot-password', authController.forgotPassword.bind(authControlle
 // verify forgot password otp
 router.post('/verify-forgot-password-otp', authController.verifyForgotPasswordOTP.bind(authController));
 
-// router.post('/logout', authController.logout.bind(authController))
+router.post('/logout', verifyToken, authController.logout.bind(authController))
 
 // router.get('/users', authController.getAllUsers.bind(authController));
 

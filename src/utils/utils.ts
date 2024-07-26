@@ -2,6 +2,27 @@ import multer from "multer";
 import slugify from "slugify";
 
 export class Utils {
+
+    static getCurrentDate(): string {
+        // return new Date().toLocaleDateString(
+        //     'en-US', {
+        //         year: 'numeric',
+        //         month: '2-digit',
+        //         day: '2-digit'
+        //     }
+        // );
+        // i need algeria date format
+        return new Date().toLocaleString('en-US', {
+            timeZone: 'Africa/Algiers',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+        });
+        // what is the difference between toLocaleDateString and toLocaleString
+        // toLocaleDateString() returns the date portion of a Date object as a string, using locale conventions.
+        // toLocaleString() returns a string with a language sensitive representation of this date.
+    }
+
     static getFormattedDate(date: Date): string {
         return date.toLocaleDateString();
     }

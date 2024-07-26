@@ -11,6 +11,8 @@ import { Otp } from "../../domain/entities/Otp";
 import { EmailService } from "../../infrastructure/services/EmailService";
 import { log } from "console";
 import { AuthUtils } from "../../utils/auth_utils";
+import { CustomRequest } from "../../domain/entities/custumeRequest";
+import RedisService from "../../infrastructure/services/RedisService";
 
 
 // dotenv.config({ path: `.env.${process.env.NODE_ENV || 'development'}` });
@@ -209,6 +211,26 @@ export class AuthController {
             return res.status(400).json({ message: error });
         }
     }
+
+    // TODO: Implement the logout method
+    async logout(req: CustomRequest, res: Response) {
+        try {
+            const userId = req.user?.id;
+            const { refreshToken } = req.body;
+
+            const decoded = AuthUtils.verifyRefreshToken(refreshToken);
+            if (!decoded) {
+                return res.status(401).json({ message: 'Invalid refresh token' });
+            }
+            
+            const redisService = RedisService.getInstance();
+            await redisService.del(userId as string);
+            return res.status(200).json({ message: 'User logged out successfully' });
+        } catch (error) {
+            return res.status(400).json({ message: error });
+        }
+    }
+
     // TODO: Implement refresh token method
     async refreshToken(req: Request, res: Response) {
         try {
