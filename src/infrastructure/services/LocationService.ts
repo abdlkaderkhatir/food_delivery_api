@@ -26,6 +26,9 @@ export class LocationService {
 
     static getNearRestaurents = async (restaurents : Restaurent[] , myLong: number , myLat : number) => {
         const nearRestaurents = [] as Restaurent[];
+        if(restaurents.length === 0) {
+            return nearRestaurents;
+        }
         restaurents.map((restaurent) => {
                 let distance = this.calculateDistance(myLat, myLong, restaurent.latitude!, restaurent.longitude!);
                 console.log('distance', distance);

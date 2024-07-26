@@ -54,12 +54,18 @@ export class AddressRepository implements IAddressRepository {
 
     async getLimitedAddresses(userId: string , limit: number): Promise<Address[]> {
         const addresses = await this.addressModel.find({ user_id: userId }).limit(limit);
+        if (!addresses) {
+            return [];
+        }
         return addresses.map(address => address.toObject());
     }
 
 
     async getAddressesByPagination(userId: string , page: number , limit: number): Promise<Address[]> {
         const addresses = await this.addressModel.find({ user_id: userId }).skip((page - 1) * limit).limit(limit);
+        if (!addresses) {
+            return [];
+        }
         return addresses.map(address => address.toObject());
     }
 

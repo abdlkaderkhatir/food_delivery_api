@@ -80,6 +80,9 @@ export class OrderRepository implements IOrderRepository {
       //   }
       // }
     ]);
+    if (!orders) {
+      return [];
+    }
     return orders.map(order => order);
   }
 
@@ -98,6 +101,9 @@ export class OrderRepository implements IOrderRepository {
       { $skip: (page - 1) * limit },
       { $limit: limit }
     ]);
+    if (!orders) {
+      return [];
+    } 
     return orders.map(order => order);
   }
 

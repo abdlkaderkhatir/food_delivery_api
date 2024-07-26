@@ -33,6 +33,9 @@ export class RestaurentRepository implements IRestaurentRepository {
     async getAllRestaurentsPagination(page: number, limit: number): Promise<Restaurent[]> {
         try {
             const restaurents = await this.restaurentModel.find().skip((page - 1) * limit).limit(limit);
+            if (!restaurents) {
+                return [];
+            }
             return restaurents.map(restaurent => restaurent.toObject() as Restaurent);
         } catch (error) {
             throw error;

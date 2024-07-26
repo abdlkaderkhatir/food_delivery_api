@@ -14,13 +14,16 @@ export class Utils {
         // i need algeria date format
         return new Date().toLocaleString('en-US', {
             timeZone: 'Africa/Algiers',
-            year: 'numeric',
-            month: '2-digit',
-            day: '2-digit'
         });
         // what is the difference between toLocaleDateString and toLocaleString
         // toLocaleDateString() returns the date portion of a Date object as a string, using locale conventions.
         // toLocaleString() returns a string with a language sensitive representation of this date.
+        // example
+        // const date = new Date(Date.UTC(2012, 11, 20, 3, 0, 0));
+        // console.log(date.toLocaleString('ar-EG'));
+        // expected output: "٢٠‏/١٢‏/٢٠١٢ ٦:٠٠:٠٠ ص"
+        // console.log(date.toLocaleDateString('ar-EG'));
+        // expected output: "٢٠‏/١٢‏/٢٠١٢"
     }
 
     static getFormattedDate(date: Date): string {
